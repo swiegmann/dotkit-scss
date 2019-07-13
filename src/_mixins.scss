@@ -1,0 +1,279 @@
+// The infamous clearfix
+// @version 1.0
+// @date 2019-05-31
+@mixin dk-clearfix {
+  &::before,
+  &::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+}
+
+
+// Returns the z-index of an element from a list (fallback to a default list)
+// examples dk-z-index('header'); dk-z-index('header', $my-list); 
+// @param {String} $name - item-name
+// @param {List} [$list] - predefined list, fallback to $z-index
+// @return {Int} - ratio
+// @version 1.0
+// @date 2019-05-08
+
+// You may and should overwrite this variable.
+// Overwrite it BEFORE you use any 'dk-z-index(...)'
+$dk-mixin-z-index-default-z-index-list: () !default;
+
+@mixin dk-z-index($element, $list: $dk-mixin-z-index-default-z-index-list) {
+  @if index($list, $element) {
+    z-index: (length($list) - index($list, $element)) + 1;
+  } @else {
+    @warn 'There is no item "#{$element}" in this list; choose one of: #{$list}';
+  }
+}
+
+
+// Placeholders in all separate formats
+// examples @include input-placeholder { color: $grey; }
+// @version 1.0
+// @date 2019-05-08
+// @see https://engageinteractive.co.uk/blog/top-10-scss-mixins
+@mixin dk-input-placeholder {
+    &.placeholder { @content; }
+    &:-moz-placeholder { @content; }
+    &::-moz-placeholder { @content; }
+    &:-ms-input-placeholder { @content; }
+    &::-webkit-input-placeholder { @content; }
+}
+
+
+@mixin dk-img-responsive-width {
+  width: auto;
+  height: 100%;
+}
+
+
+@mixin dk-img-responsive-height {
+  width: 100%;
+  height: auto;
+}
+
+
+@mixin dk-push-auto {
+  margin: { 
+    left: auto;
+    right: auto;
+  }
+}
+
+
+@mixin dk-object-fit-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+@mixin dk-object-fit-contain {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+
+@mixin visually-hidden {
+  margin: -1px;
+  padding: 0;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip: rect(0, 0, 0, 0);
+  position: absolute;  
+}
+
+
+@mixin dk-disable-tap-highlight {
+  backface-visibility: hidden;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+@mixin dk-center($x: 50%, $y: 50%) {
+  transform: translate(-$x, -$y);  
+  top: $y;
+  left: $x;
+}
+
+
+@mixin dk-center-h($x: 50%) {
+  transform: translateX(-$x);  
+  left: $x;
+}
+
+
+@mixin dk-center-v($y: 50%) {
+  transform: translateY(-$y);  
+  top: $y;
+}
+
+
+@mixin dk-max-dimension {
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+
+@mixin dk-transition($properties...) {
+  $list: (); 
+
+  @for $i from 1 through length($properties) {
+    $map: nth($properties, $i);
+    $value: ();
+
+    // property /optional
+    // transition-property: none|all|property|initial|inherit
+    $value: append($value, map-get($map, property));
+    
+    // duration *required
+    // transition-duration: time|initial|inherit
+    $value: append($value, map-get($map, duration));
+    
+    // timing-function /optional
+    // transition-timing-function: linear|ease|ease-in|ease-out|ease-in-out|step-start|step-end|steps(int,start|end)|cubic-bezier(n,n,n,n)|initial|inherit;
+    $value: append($value, map-get($map, timing-function));
+    
+    // delay /optional
+    // transition-delay: time|initial|inherit
+    $value: append($value, map-get($map, delay));
+    
+    // initial /optional
+    $value: append($value, map-get($map, initial));
+    
+    // inherit /optional
+    $value: append($value, map-get($map, inherit));
+    
+    
+    $list: append($list, $value, comma);
+  }
+    
+  transition: $list;
+}
+
+
+@mixin dk-animation($properties...) {  
+  $list: ();
+
+  @for $i from 1 through length($properties) {
+    $map: nth($properties, $i);
+    $value: ();
+
+    // name /optional
+    // animation-name: keyframename|none|initial|inherit
+    $value: append($value, map-get($map, name));
+    
+    // duration *required
+    // animation-duration: time|initial|inherit
+    $value: append($value, map-get($map, duration));
+    
+    // timing-function /optional
+    // animation-timing-function: linear|ease|ease-in|ease-out|ease-in-out|step-start|step-end|steps(int,start|end)|cubic-bezier(n,n,n,n)|initial|inherit
+    $value: append($value, map-get($map, timing-function));
+    
+    // delay /optional
+    // animation-delay: time|initial|inherit
+    $value: append($value, map-get($map, delay));
+    
+    // iteration-count /optional
+    // animation-iteration-count: number|infinite|initial|inherit
+    $value: append($value, map-get($map, iteration-count));
+    
+    // direction /optional
+    // animation-direction: normal|reverse|alternate|alternate-reverse|initial|inherit
+    $value: append($value, map-get($map, direction));
+    
+    // fill-mode /optional
+    // animation-fill-mode: none|forwards|backwards|both|initial|inherit
+    $value: append($value, map-get($map, fill-mode));
+    
+    // play-state /optional
+    // animation-play-state: paused|running|initial|inherit
+    $value: append($value, map-get($map, play-state));
+    
+    // initial /optional
+    $value: append($value, map-get($map, initial));
+    
+    // inherit /optional
+    $value: append($value, map-get($map, inherit));
+    
+    
+    $list: append($list, $value, comma);
+  }
+    
+  animation: $list;
+}
+
+
+@mixin dk-background($properties...) {  
+  $list: ();
+
+  @for $i from 1 through length($properties) {
+    $map: nth($properties, $i);
+    $value: ();
+
+    // color
+    // background-color: color|transparent|initial|inherit
+    $value: append($value, map-get($map, color));
+    
+    // image
+    // background-image: url|none|initial|inherit
+    $value: append($value, map-get($map, image));
+    
+    // position & size
+    @if (map-get($map, size) and map-get($map, position)) {
+      // position
+      // background-position: value
+      
+      // size
+      // background-size: auto|length|cover|contain|initial|inherit
+      
+      $value: append($value, map-get($map, position) + "/" + map-get($map, size));
+    } @else {
+      // position
+      // background-position: value
+      $value: append($value, map-get($map, position));
+      
+      // size
+      // background-size: auto|length|cover|contain|initial|inherit
+      $value: append($value, map-get($map, size));
+    }
+    
+    // repeat
+    // background-repeat: repeat|repeat-x|repeat-y|no-repeat|initial|inherit
+    $value: append($value, map-get($map, repeat));
+    
+    // origin
+    // background-origin: padding-box|border-box|content-box|initial|inherit
+    $value: append($value, map-get($map, origin));
+    
+    // clip
+    // background-clip: border-box|padding-box|content-box|initial|inherit
+    $value: append($value, map-get($map, clip));
+    
+    // attachment
+    // background-attachment: scroll|fixed|local|initial|inherit
+    $value: append($value, map-get($map, attachment));
+    
+    // initial /optional
+    $value: append($value, map-get($map, initial));
+    
+    // inherit /optional
+    $value: append($value, map-get($map, inherit));
+    
+    
+    $list: append($list, $value, comma);
+  }
+    
+  background: $list;
+}
