@@ -5,13 +5,13 @@
 // @return {Int} - ratio
 // Version: 1.0
 // Date: 2019-05-08
-@function dk-fluid-aspect($a, $b, $percentChar: false) {
+@function dk-fluid-aspect($a, $b, $asPercentage: false) {
   $s: 0;
   
-  @if ($percentChar) {
+  @if ($asPercentage) {
     $s: percentage($a / $b);
   } @else {
-    $s: $a / ($b / 100)
+    $s: $a / ($b / 100);
   }
     
   @return $s;
