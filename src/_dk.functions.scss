@@ -18,6 +18,28 @@
 }
 
 
+
+// Returns the z-index of an element from a list (fallback to a default list)
+// examples: z-index: dk-z-index('header'); z-index: dk-z-index('header', $my-list); 
+// @param {String} $name - item-name
+// @param {List} [$list] - predefined list, fallback to $z-index
+// @return {Int} - ratio
+// @version 1.0 
+// @date 2019-05-08
+
+// You may and should overwrite this variable.
+// Overwrite it BEFORE you use any 'dk-z-index(...)'
+$dk-function-z-index-default-z-index-list: () !default;
+
+@function dk-z-index($element, $list: $dk-function-z-index-default-z-index-list) {
+  @if index($list, $element) {
+    @return (length($list) - index($list, $element)) + 1;
+  } @else {
+    @warn 'There is no item "#{$element}" in this list; choose one of: #{$list}';
+  }
+}
+
+
 @function dk-pow($number, $exponent) {
   $value: 1;
 

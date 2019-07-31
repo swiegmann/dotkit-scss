@@ -11,27 +11,6 @@
 }
 
 
-// Returns the z-index of an element from a list (fallback to a default list)
-// examples dk-z-index('header'); dk-z-index('header', $my-list); 
-// @param {String} $name - item-name
-// @param {List} [$list] - predefined list, fallback to $z-index
-// @return {Int} - ratio
-// @version 1.0
-// @date 2019-05-08
-
-// You may and should overwrite this variable.
-// Overwrite it BEFORE you use any 'dk-z-index(...)'
-$dk-mixin-z-index-default-z-index-list: () !default;
-
-@mixin dk-z-index($element, $list: $dk-mixin-z-index-default-z-index-list) {
-  @if index($list, $element) {
-    z-index: (length($list) - index($list, $element)) + 1;
-  } @else {
-    @warn 'There is no item "#{$element}" in this list; choose one of: #{$list}';
-  }
-}
-
-
 // Placeholders in all separate formats
 // examples @include input-placeholder { color: $grey; }
 // @version 1.0
