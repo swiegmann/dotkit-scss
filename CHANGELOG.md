@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.004 / 2019-08-13
+ - extended placeholder %dk-user-select-none with more attributes
+
 ## 1.003 / 2019-07-31
   - turned mixin dk-z-index into a function
 

@@ -3,8 +3,18 @@
 }
 
 
+/*
+  Gathered information about "user-select".
+  This one seems to work best (2019/08).
+*/
 %dk-user-select-none {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
   user-select: none;
+  cursor: default;
 }
 
 
