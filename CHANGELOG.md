@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.005 / 2020-05-17
+ - remove debug-scss file (debugging should be handled by the host-system)
+
 ## 1.004 / 2019-08-13
  - extended placeholder %dk-user-select-none with more attributes
 
