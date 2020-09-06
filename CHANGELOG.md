@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.006 / 2020-09-06
+ - extend infinity breakpoint (the last one) in function "dk-fluid-type"
+
 ## 1.005 / 2020-05-17
  - remove debug-scss file (debugging should be handled by the host-system)
 
