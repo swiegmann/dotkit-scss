@@ -1,0 +1,297 @@
+/// dk-convert-unit
+/// Convert a value to another unit
+///
+/// @param {Variable} $value Original value (inc. unit)
+/// @param {Variable | String} $unit Unit to convert to
+///
+/// @return {Unit}
+///
+/// @example scss
+///   dk-convert-unit(1rem, em)
+///   // 1em
+///
+/// @require {Function} dk-parse-float Removes a unit from a value
+///
+/// @link https://stackoverflow.com/a/26359742 The original code
+@function dk-convert-unit($value, $unit) {
+    $strings: 'px' 'cm' 'mm' '%' 'ch' 'pica' 'in' 'em' 'rem' 'pt' 'pc' 'ex' 'vw' 'vh' 'vmin' 'vmax';
+    $units:   1px  1cm  1mm  1%  1ch  1pica  1in  1em  1rem  1pt  1pc  1ex  1vw  1vh  1vmin  1vmax;
+    $index: index($strings, $unit);
+
+    @if not $index {
+      @warn "Unknown unit `#{$unit}`.";
+      @return false;
+    }
+
+    @return dk-parse-float($value) * nth($units, $index);
+}
+
+
+
+/// dk-explode
+/// Split a string into several parts using a delimiter
+///
+/// @param {String} $str String to split
+/// @param {String} $delimiter ('') String to use as a delimiter to split the string
+///
+/// @return {List}
+///
+/// @example scss
+///   dk-explode("The quick brown fox", $delimiter: " ")
+///   // ("The", "quick", "brown", "fox")
+///
+/// @link https://github.com/HugoGiraudel/SassyStrings/blob/master/stylesheets/private/_str-explode.scss The original code
+@function dk-explode($str, $delimiter: "") {
+  $result: ();
+  $length: str-length($str);
+
+  @if str-length($delimiter) == 0 {
+    @for $i from 1 through $length {
+      $result: append($result, str-slice($str, $i, $i));
+    }
+
+    @return $result;
+  }
+
+  $running: true;
+  $remaining: $str;
+
+  @while $running {
+    $index: str-index($remaining, $delimiter);
+
+    @if $index {
+      $slice: str-slice($remaining, 1, $index - 1);
+      $result: append($result, $slice);
+      $remaining: str-slice($remaining, $index + str-length($delimiter));
+    } @else {
+      $running: false;
+    }
+  }
+
+  @return append($result, $remaining);
+}
+
+
+
+/// dk-implode
+/// Join list elements to form a single string
+///
+/// @param {List} $list List of strings to implode
+/// @param {String} $glue The "glue" between elements in the result string
+///
+/// @return {String} The joined string
+///
+/// @example scss
+///   dk-implode(("The", "quick", "brown", "fox"), $glue: " ")
+///   // "The quick brown fox"
+///
+/// @link https://gist.github.com/danielpchen/1bef5000cfda98dbf6be The original code
+@function dk-implode($list, $glue: "") {
+	$result: null;
+
+	@for $i from 1 through length($list) {
+		$piece: nth($list, $i);
+
+		@if type-of($piece) == list {
+			$result: unquote("#{$result}#{$glue}#{implode($piece, $glue)}");
+		} @else {
+			$result: unquote("#{$result}#{$glue}#{$piece}");
+		}
+	}
+
+	@if $result != null {
+		$result: str-slice($result, str-length($glue) + 1, -1);
+	}
+	@return $result;
+}
+
+
+
+/// dk-parse-float
+/// Remove a unit from a value
+///
+/// @param {String} $value
+///
+/// @return {Float}
+///
+/// @example scss
+///   dk-parse-float(1em)
+///   // 1
+///
+/// @link https://codepen.io/MadeByMike/pen/bEEGvv
+/// @link https://css-tricks.com/snippets/css/fluid-typography/
+@function dk-parse-float($value) {
+  @return $value / ($value * 0 + 1);
+}
+
+
+
+/// dk-rem
+/// Convert a variable with the unit pixel/rem/em (or unitless) to its equivalent in rem/em
+/// Assuming px when variable is unitless
+///
+/// @param {Number} $value Original value
+/// @param {Unit} $unit (rem) New unit rem|em
+///
+/// @return {Number}
+///
+/// @example scss
+///   dk-rem(16)
+///   // 1rem
+///
+///   dk-rem(16px)
+///   // 1rem
+///
+///   dk-rem(16px, em)
+///   // 1em
+///
+///   dk-rem(1em)
+///   // 1rem
+///
+/// @require {Variable} $dk-cfg-rem-px-ratio
+/// @require {Function} dk-convert-unit Convert a value to another unit
+@function dk-rem($value, $unit: rem) {
+  $value-unit: unit($value);
+
+  @if unitless($value) or $value-unit == px {
+    @if $unit == rem or $unit == em {
+      @return dk-convert-unit($value * (1 / $dk-cfg-rem-px-ratio), $unit);
+    }
+  } @else if $value-unit == em or $value-unit == rem {
+    @return dk-convert-unit($value, $unit);
+  }
+}
+
+
+
+/// dk-var
+/// (Deep-) Get/Set a Variable
+///
+/// @param {Variable} $m Get:String|Set:Variable|Map
+/// @param {Variable} ('') Set:Variable
+///
+/// @return {Variable}
+///
+/// @example scss
+///   // get:
+///   $foo: dk-var(node); // Get the value of "node"
+///   $foo: dk-var(node1/node2); // Get the value of "node1/node2"
+///   // set:
+///   $foo: dk-var(node1, 1rem); // Set the value of "node" to 1rem
+///   $foo: dk-var(node1/node2, 1rem); // Set the value of "node1/node2" to 1rem
+///   $foo: dk-var(node1/node2, (node3: 1rem, node4: 2rem)) // Set the value of node2 to a map of sub-nodes
+///
+/// @require {Variable} $dk-cfg-node-divider
+/// @require {Map} $dk
+@function dk-var($m, $value: "__4lr1t3-th3n-k33p-yOur-s3cr3ts__") {
+  // set
+  @if type-of($m) == 'map' or $value != "__4lr1t3-th3n-k33p-yOur-s3cr3ts__" {
+    @return _dk-set($m, $value);
+  }
+
+  // get
+  $keys: dk-explode($m, $dk-cfg-node-divider);
+  @return _dk-map-get($dk, $keys...);
+}
+
+
+
+
+
+//
+//
+//
+// Only internal functions below
+// Not for common use.
+//
+//
+//
+//
+
+/// _dk-map-get
+/// Fetch nested map-keys ("Deep-Get")
+///
+/// @param {Map} $map Map
+/// @param {Arglist} $keys Keys to fetch
+///
+/// @return {Variable} Result
+///
+/// @example scss
+///   _dk-map-get($map, color);
+///   _dk-map-get($map, colors, background);
+///
+/// @link https://www.sitepoint.com/extra-map-functions-sass/ Map Deep Get
+@function _dk-map-get($map, $keys...) {
+  @each $key in $keys {
+    @if map-has-key($map, $key) {
+      $map: map-get($map, $key);
+    } @else {
+      @error "[dotKit] Node \"#{$key}\" not set in \"#{dk-implode($keys, $dk-cfg-node-divider)}\". Forced Abort";
+      @return null;
+    }
+  }
+
+  @return $map;
+}
+
+
+
+/// _dk-set
+/// Set a variable into the $dk Map
+///
+/// @param {Map | String}
+/// @param {Variable} (null)
+///
+/// @return {Map} $dk
+///
+/// @example scss
+///   $dk: _dk-set(node, 1em);
+///   $dk: _dk-set(node1/node2, 1em);
+///   $dk: _dk-set((
+///     node1: 1em,
+///     node2/node1: 1em,
+///     node3/node1: 1em
+///   ));
+///
+/// @require {Map} $dk
+@function _dk-set($m, $value: null) {
+  // case 1/3: called with a map. merge only
+  @if type-of($m) == 'map' {
+    @return map-merge($dk, $m);
+  }
+
+
+  $keys: dk-explode($m, $dk-cfg-node-divider);
+
+
+  // case 2/3: called with a key and a value/map
+  @if length($keys) == 1 {
+    @return map-merge($dk, ($m: $value));
+  }
+
+
+  // case 3/3: called with nodes and a value
+  $maps: ($dk,);
+  $result: null;
+
+  @for $i from 1 through length($keys) - 1 {
+    $current-key: nth($keys, $i);
+    $current-map: nth($maps, -1);
+    $current-get: map-get($current-map, $current-key);
+
+    @if $current-get == null {
+      $current-get: ();
+    }
+
+    $maps: append($maps, $current-get);
+  }
+
+  @for $i from length($maps) through 1 {
+    $current-map: nth($maps, $i);
+    $current-key: nth($keys, $i);
+    $current-val: if($i == length($maps), $value, $result);
+    $result: map-merge($current-map, ($current-key: $current-val));
+  }
+
+  @return $result;
+}

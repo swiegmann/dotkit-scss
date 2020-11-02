@@ -1,0 +1,39 @@
+//
+// Import 3rd Party Libraries
+//
+@import "lib/_mq.scss";
+@import "lib/_map-get-prev.scss";
+@import "lib/_map-get-next.scss";
+
+
+//
+// Import dotkKit-files
+//
+@import "_functions.scss";
+@import "_mixins.scss";
+
+
+//
+// Configuration
+//
+$dk-cfg-rem-px-ratio: 16 !default;
+$dk-cfg-node-divider: "/" !default;
+
+
+//
+// Set configuration for "sass-mq"-library/mixin
+//
+$mq-base-font-size: $dk-cfg-rem-px-ratio;
+$mq-responsive: true;
+
+
+//
+// This is the configuration-root variable
+//
+$dk: ();
+
+
+//
+// Apply some configuration variables from above to dotKit
+//
+$dk: dk-var(px-per-rem, $dk-cfg-rem-px-ratio);

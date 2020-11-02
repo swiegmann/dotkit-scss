@@ -1,0 +1,131 @@
+@charset "utf-8";
+
+
+@import "../src/_dotkit.scss";
+
+
+//
+// Devices [+ Breakpoints]
+//
+$dk: dk-var(device, (
+  "default": ( // Default (Configure it as "Mobile First")
+    XS: dk-rem(0px, em),    // e[X]tra-[S]mall
+    SM: dk-rem(640px, em),  // [SM]all
+    MD: dk-rem(960px, em),  // [M]e[D]ium
+    LG: dk-rem(1280px, em), // [L]ar[G]e
+    XL: dk-rem(1920px, em) // e[X]tra [L]arge
+  ),
+  desktop: ( // Desktop
+    XS: dk-rem(0px, em),    // e[X]tra-[S]mall
+    SM: dk-rem(640px, em),  // [SM]all
+    MD: dk-rem(960px, em), // [M]e[D]ium
+    LG: dk-rem(1280px, em), // [L]ar[G]e
+    XL: dk-rem(1920px, em) // e[X]tra [L]arge
+  )
+));
+
+
+
+//
+// Themes [+ Breakpoints]:
+//
+$dk: dk-var(theme, (
+  "default": ( // Default
+    XS: dk-rem(0px, em),    // e[X]tra-[S]mall
+    SM: dk-rem(640px, em),  // [SM]all
+    MD: dk-rem(960px, em), // [M]e[D]ium
+    LG: dk-rem(1280px, em), // [L]ar[G]e
+    XL: dk-rem(1920px, em) // e[X]tra [L]arge
+  ),
+  darkmode: (
+    XS: dk-rem(0px, em),    // e[X]tra-[S]mall
+    SM: dk-rem(640px, em),  // [SM]all
+    MD: dk-rem(960px, em), // [M]e[D]ium
+    LG: dk-rem(1280px, em), // [L]ar[G]e
+    XL: dk-rem(1920px, em) // e[X]tra [L]arge
+  )
+));
+
+
+//
+// Device Custom-Properties (AKA: "CSS Variables")
+//
+$dk: dk-var(custom-properties-device, (
+  "font": (
+    "size": (
+      "default": (
+        XS: clamp(1rem, calc(0.75rem + 1vw), 100rem),
+        SM: clamp(1rem, calc(0.667rem + 1vw), 100rem),
+        MD: clamp(1rem, calc(0.25rem + 1vw), 100rem),
+        LG: clamp(1rem, calc(0.25rem + 1vw), 100rem),
+        XL: clamp(1rem, calc(0.25rem + 1vw), 100rem)
+      )
+    )
+  ),
+
+  "padding": (
+    h: (XS: dk-rem(20), SM: dk-rem(40), MD: dk-rem(60), LG: dk-rem(80), XL: dk-rem(100)),
+    v: (XS: dk-rem(10), SM: dk-rem(20), MD: dk-rem(30), LG: dk-rem(40), XL: dk-rem(50))
+  )
+));
+
+
+
+//
+// Colors
+//
+$dk: dk-var("color", (
+  "black": #000,
+  "white": #fff,
+  "default": (
+    "gray": #c0c0c0
+  ),
+  darkmode: (
+    dark-gray: #202020
+  )
+));
+
+
+
+$dk: dk-var(custom-properties-theme, (
+  color: (
+    body: (
+      background: (
+        "default": dk-var("color/default/gray"),
+        darkmode: dk-var("color/darkmode/dark-gray")
+      ),
+      "font": (
+        "default": dk-var("color/black"),
+        darkmode: dk-var("color/white")
+      )
+    )
+  )
+));
+
+
+
+
+
+//
+// Apply
+//
+
+html { // Apply all defined custom-variables of devices
+  @include dk-custom-properties(dk-var(device), dk-var(custom-properties-device)); // Add Custom-Properties to this selector
+}
+
+body { // Apply all defined custom-variables of themes
+  @include dk-custom-properties(dk-var(theme), dk-var(custom-properties-theme)); // Add Custom-Properties to this selector
+}
+
+
+html {
+  font-size: var(--font-size);
+}
+
+
+body {
+  background-color: var(--color-body-background);
+  color: var(--color-body-font);
+  padding: var(--padding-v) var(--padding-h);
+}

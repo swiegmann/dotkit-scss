@@ -1,0 +1,342 @@
+/// dk-custom-properties
+/// Apply mapped custom-properties ("CSS Variables") based on name/breakpoint-map to the current selector
+///
+/// @param {Map} $map The map with name/breakpoint key/values
+/// @param {Variable} $map-properties
+/// @param {String} $_root-key ('-')
+/// @param {String} $_entry-name (null) Current name with breakpoints
+///
+/// @example scss
+///   // Example #1
+///   html { // any selector
+///     @include dk-custom-properties(
+///       ( // name/breakpoint-map
+///         "default": (XS: 0em, MD: 60em)
+///       ),
+///       ( // property-map
+///         "padding": (XS: 1rem, MD: 2rem)
+///       )
+///     );
+///   }
+///   /*
+///   Generated output:
+///   html {
+///     --padding: 1rem; }
+///   @media (min-width: 60em) {
+///     html {
+///       --padding: 2rem; } }
+///   */
+///
+///   // Example #2
+///   html { // any selector
+///     @include dk-custom-properties(
+///       ( // name/breakpoint-map
+///         "default": (XS: 0em, MD: 60em),
+///         desktop: (XS: 0em, MD: 60em)
+///       ),
+///       ( // property-map
+///         "padding": (
+///           "default": (XS: 1rem, MD: 2rem),
+///           desktop: (XS: 2rem, MD: 4rem)
+///         )
+///       )
+///     );
+///   }
+///   /*
+///   Generated output:
+///   html {
+///     --padding: 1rem; }
+///     @media (min-width: 60em) {
+///       html {
+///        --padding: 2rem; } }
+///     html.desktop {
+///       --padding: 2rem; }
+///      @media (min-width: 60em) {
+///         html.desktop {
+///          --padding: 4rem; } }
+///   */
+///
+/// @requires {Mixin} mq
+@mixin dk-custom-properties($map, $map-properties, $_root-key: '-', $_entry-name: null) {
+  @if type-of($map-properties) != "map" { // $map-properties is a real value -> output it
+    #{$_root-key}: $map-properties;
+  } @else { // $map-properties is any map
+    $keys: map-keys($map-properties);
+
+    @each $key in $keys {
+      $rec-root-key: null;
+
+      @if type_of($key) == number {
+        $rec-root-key: $_root-key + "-" + $key;
+      } @else {
+        $rec-root-key: $_root-key + "-" + to-lower-case($key);
+      }
+
+      $rec-value: map-get($map-properties, $key);
+
+      @if $_entry-name and map-has-key(map-get($map, $_entry-name), $key) { // $key is present in device->breakpoint-map
+        @if nth(map-keys(map-get($map, $_entry-name)), 1) == $key { // it is the 1st key, no media-query needed
+          @include dk-custom-properties($map, $rec-value, $_root-key);
+        } @else {
+          @if map-get($map-properties, $key) != map-get-prev($map-properties, $key) { // Only add if value differs from previous value
+            $breakpoints: map-get($map, $_entry-name);
+
+            @include mq($key, $breakpoints: $breakpoints) {
+              @include dk-custom-properties($map, $rec-value, $_root-key);
+            }
+          }
+        }
+      } @else if map-has-key(nth(map-values($map), 1), $key) { // $key is present in default device->breakpoint-map
+        @if nth(map-keys(nth(map-values($map), 1)), 1) == $key { // it is the 1st key, no media-query needed
+          @include dk-custom-properties($map, $rec-value, $_root-key);
+        } @else {
+          @if map-get($map-properties, $key) != map-get-prev($map-properties, $key) { // Only add if value differs from previous value
+            $breakpoints: map-get($map, nth(map-keys($map), 1));
+
+            @include mq($key, $breakpoints: $breakpoints) {
+              @include dk-custom-properties($map, $rec-value, $_root-key);
+            }
+          }
+        }
+      } @else if map-has-key($map, $key) { // $key is present in device-map
+        @if nth(map-keys($map), 1) == $key { // it is the default-device, no :root-class needed
+          @include dk-custom-properties($map, $rec-value, $_root-key, $key);
+        } @else {
+          @include _dk-custom-properties_device($map, $key) {
+            @include dk-custom-properties($map, $rec-value, $_root-key, $key);
+          }
+        }
+      } @else { // call recursive
+        @include dk-custom-properties($map, $rec-value, $rec-root-key);
+      }
+    }
+  }
+}
+
+
+
+/// dk-device
+/// Apply @content to a device using the @mixin mq()
+///
+/// @param {String} $name Device-Name
+/// @param {String | Boolean} $from (false)
+/// @param {String | Boolean} $until (false)
+/// @param {String | Boolean} $and (false)
+/// @param {String} $media-type (false)
+/// ... and all other arguments the @mixin mq() accepts. look up _mq.scss in the /lib folder
+/// @content styling rules
+///
+/// @example scss
+///   // Prerequisites: name/breakpoint-map set-up with: "$dk: dk-var(device, ...)"
+///
+///   // Example #1
+///   dk-device(desktop) {
+///     font-size: 1rem;
+///   }
+///
+///   // Example #2
+///   dk-device(desktop, MD) {
+///     font-size: 1rem;
+///   }
+///
+///   // Example #3
+///   dk-device(desktop, XS, $until: MD) { // with one @mixin mq()-Argument
+///     font-size: 1rem;
+///   }
+///
+/// @require {Function} dk-var
+/// @require {Mixin} _dk-breakpoint
+@mixin dk-device($name, $from: false, $until: false, $and: false, $media-type: $mq-media-type, $breakpoints: null, $responsive: $mq-responsive, $static-breakpoint: $mq-static-breakpoint) {
+  $map: dk-var(device);
+  $root-selector: if(is-superselector(':root', &), ":root", html);
+
+  @include _dk-breakpoint($map, $name, $root-selector, $from, $until, $and, $media-type, $breakpoints, $responsive, $static-breakpoint) {
+    @content;
+  }
+}
+
+
+
+/// dk-theme
+/// Apply @content to a theme using the @mixin mq()
+///
+/// @param {String} $name Theme-Name
+/// @param {String | Boolean} $from (false)
+/// @param {String | Boolean} $until (false)
+/// @param {String | Boolean} $and (false)
+/// @param {String} $media-type (false)
+/// ... and all other arguments the @mixin mq() accepts. look up _mq.scss in the /lib folder
+/// @content styling rules
+///
+/// @example scss
+///   // Prerequisites: name/breakpoint-map set-up with: "$dk: dk-var(theme, ...)"
+///
+///   // Example #1
+///   dk-theme(desktop) {
+///     background-color: #000;
+///   }
+///
+///   // Example #2
+///   dk-theme(desktop, MD) {
+///     background-color: #000;
+///   }
+///
+///   // Example #3
+///   dk-theme(desktop, XS, $until: MD) { // with one @mixin mq()-Argument
+///     background-color: #000;
+///   }
+///
+/// @require {Function} dk-var
+/// @require {Mixin} _dk-breakpoint
+@mixin dk-theme($name, $from: false, $until: false, $and: false, $media-type: $mq-media-type, $breakpoints: null, $responsive: $mq-responsive, $static-breakpoint: $mq-static-breakpoint) {
+  $map: dk-var(theme);
+  $root-selector: body;
+
+  @include _dk-breakpoint($map, $name, $root-selector, $from, $until, $and, $media-type, $breakpoints, $responsive, $static-breakpoint) {
+    @content;
+  }
+}
+
+
+
+
+//
+//
+//
+// Only internal mixins below
+// Not for common use.
+//
+//
+//
+//
+
+// _dk-custom-properties_device
+// internal mixin used by @mixin dk-create-css-variables (above)
+//
+// arguments:
+// 1. $type
+// a key from the configuration device-map
+//
+// 2. @content
+//
+//
+// examples:
+//
+// _dk-custom-properties_device(desktop) {
+//  background-color: #000;
+// }
+//
+// version: 1.0
+// date: 2020-08-29
+@mixin _dk-custom-properties_device($device-map, $type) {
+  @if map-has-key($device-map, $type) {
+    $is-default-device: nth(map-keys($device-map), 1) == $type;
+    $is-root-selector: if(is-superselector('html', &) or is-superselector(':root', &), true, false);
+    $el-selector: if($is-root-selector, '&', 'html');
+    $foo: "";
+
+    @if $is-root-selector {
+      &.#{$type} {
+        @content;
+      }
+    } @else {
+      // html.#{$type} & {
+      @if is-superselector('body', &) {
+        &.#{$type} {
+          @content;
+        }
+      } @else {
+        body.#{$type} & {
+          @content;
+        }
+      }
+    }
+  } @else {
+    @debug "@mixin dk-device: device-type '#{$type}' not found in config device-map.'";
+  }
+}
+
+
+
+@mixin _dk-breakpoint($device-map, $type, $root-selector, $from: false, $until: false, $and: false, $media-type: $mq-media-type, $breakpoints: null, $responsive: $mq-responsive, $static-breakpoint: $mq-static-breakpoint) {
+  // $device-map: dk-var(device);
+
+  @if not(map-has-key($device-map, $type)) {
+    @error "[dotKit] Device-Type \"#{$type}\" not found. Forced Abort";
+  }
+
+  $is-default: nth(map-keys($device-map), 1) == $type;
+  $is-root-selector: if(is-superselector('html', &) or is-superselector(':root', &), true, false);
+
+  @if $from or $until {
+    @if not($breakpoints) {
+      $breakpoints: map-get($device-map, $type);
+    }
+
+    @include mq($from, $until, $and, $media-type, $breakpoints, $responsive, $static-breakpoint) {
+      @include _dk-breakpoint-content($type, $root-selector, $is-default, $is-root-selector) {
+        @content;
+      }
+    }
+  } @else {
+    @if $and {
+      @media #{$and} {
+        @include _dk-breakpoint-content($type, $root-selector, $is-default, $is-root-selector) {
+          @content;
+        }
+      }
+    } @else {
+      @include _dk-breakpoint-content($type, $root-selector, $is-default, $is-root-selector) {
+        @content;
+      }
+    }
+  }
+}
+
+
+// Internal mixin used by _dk-breakpoint
+@mixin _dk-breakpoint-content($type, $root-selector, $is-default, $is-root-selector) {
+  // Try 1: analyze current &, if $root-selector is found add classes to it
+  $list: dk-explode(#{&}, " ");
+  $sel-replaced: "";
+  $root-selector-replaced: false;
+
+  @for $i from 1 through length($list) {
+    $sel-tmp: nth($list, $i);
+
+    @if str-slice($sel-tmp, 1, str-length($root-selector)) == $root-selector {
+      $root-selector-replaced: true;
+
+      @if not($is-default) {
+        $sel-tmp: $sel-tmp + "." + $type;
+      }
+    }
+
+    @if str-length($sel-replaced) > 0 {
+      $sel-replaced: $sel-replaced + " ";
+    }
+    $sel-replaced: $sel-replaced + $sel-tmp;
+  }
+
+  @if $root-selector-replaced {
+    @at-root #{$sel-replaced} {
+      @content;
+    }
+  } @else { // Try 2: add $root-selector to & (prepend/append)
+    @if $is-default {
+      @at-root #{$sel-replaced} {
+        @content;
+      }
+    } @else {
+      @if $is-root-selector {
+        @at-root #{$sel-replaced} #{$root-selector}.#{$type} {
+          @content;
+        }
+      } @else {
+        @at-root #{$root-selector}.#{$type} #{$sel-replaced} {
+          @content;
+        }
+      }
+    }
+  }
+}
