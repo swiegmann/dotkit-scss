@@ -6,7 +6,7 @@
 
 
 
-##### dk-convert-unit($value, $unit)
+### dk-convert-unit($value, $unit)
 
 Convert a value to another unit
 
@@ -17,7 +17,7 @@ dk-convert-unit(1rem, em)
 
 
 
-##### dk-explode($str, $delimiter)
+### dk-explode($str, $delimiter)
 
 Split a string into several parts using a delimiter
 
@@ -28,7 +28,7 @@ dk-explode("The quick brown fox", $delimiter: " ")
 
 
 
-##### dk-implode($keys, $delimiter)
+### dk-implode($keys, $delimiter)
 
 Join list elements to form a single string
 
@@ -39,7 +39,7 @@ dk-implode(("The", "quick", "brown", "fox"), $glue: " ")
 
 
 
-##### dk-parse-float($value)
+### dk-parse-float($value)
 
 Remove a unit from a value
 
@@ -50,7 +50,7 @@ dk-parse-float(1em)
 
 
 
-##### dk-rem($value [, $unit: rem/em])
+### dk-rem($value [, $unit: rem/em])
 
 Convert a variable with the unit pixel/rem/em (or unitless) to its equivalent in rem/em
 
@@ -70,7 +70,7 @@ dk-rem(1em)
 
 
 
-##### dk-var($m [, $value: null])
+### dk-var($m [, $value: null])
 
 (Deep-) Get/Set a Variable
 
@@ -92,68 +92,68 @@ $foo: dk-var(node1/node2, (node3: 1rem, node4: 2rem)) // Set the value of node2 
 
 
 
-##### dk-custom-properties($map, $map-properties)
+### dk-custom-properties($map, $map-properties)
 
 Apply mapped custom-properties ("CSS Variables") based on name/breakpoint-map to the current selector
 
 ```SCSS
 // Example #1
 html { // any selector
-	@include dk-custom-properties(
-		( // name/breakpoint-map
-			"default": (XS: 0em, MD: 60em)
-		),
-		( // property-map
-			"padding": (XS: 1rem, MD: 2rem)
-		)
-	);
+  @include dk-custom-properties(
+    ( // name/breakpoint-map
+      "default": (XS: 0em, MD: 60em)
+    ),
+    ( // property-map
+      "padding": (XS: 1rem, MD: 2rem)
+    )
+  );
 }
 
 /*
 Generated output:
 html {
-	--padding: 1rem; }
-		@media (min-width: 60em) {
-			html {
-				--padding: 2rem; } }
+  --padding: 1rem; }
+    @media (min-width: 60em) {
+      html {
+        --padding: 2rem; } }
 */
 
 
 
 // Example #2
 html { // any selector
-	@include dk-custom-properties(
-		( // name/breakpoint-map
-			"default": (XS: 0em, MD: 60em),
-			desktop: (XS: 0em, MD: 60em)
-		),
-		( // property-map
-			"padding": (
-				"default": (XS: 1rem, MD: 2rem),
-				desktop: (XS: 2rem, MD: 4rem)
-			)
-		)
-	);
+  @include dk-custom-properties(
+    ( // name/breakpoint-map
+      "default": (XS: 0em, MD: 60em),
+      desktop: (XS: 0em, MD: 60em)
+    ),
+    ( // property-map
+      "padding": (
+        "default": (XS: 1rem, MD: 2rem),
+        desktop: (XS: 2rem, MD: 4rem)
+      )
+    )
+  );
 }
 
 /*
 Generated output:
-	html {
-		--padding: 1rem; }
-		@media (min-width: 60em) {
-			html {
-				--padding: 2rem; } }
-			html.desktop {
-				--padding: 2rem; }
-		@media (min-width: 60em) {
-			html.desktop {
-				--padding: 4rem; } }
+  html {
+    --padding: 1rem; }
+    @media (min-width: 60em) {
+      html {
+        --padding: 2rem; } }
+      html.desktop {
+        --padding: 2rem; }
+    @media (min-width: 60em) {
+      html.desktop {
+        --padding: 4rem; } }
   */
 ```
 
 
 
-##### dk-device($name [, $from] [, $until] [, $and] [, $media-type] [, $breakpoints] [, $responsive] [, $static-breakpoint]) { @content; }
+### dk-device($name [, $from] [, $until] [, $and] [, $media-type] [, $breakpoints] [, $responsive] [, $static-breakpoint]) { @content; }
 
 Apply `@content` to a device using the `@mixin mq()`
 
@@ -162,24 +162,24 @@ Apply `@content` to a device using the `@mixin mq()`
 
 // Example #1
 dk-device(desktop) {
-	font-size: 1rem;
+  font-size: 1rem;
 }
 
 // Example #2
 dk-device(desktop, MD) {
-	font-size: 1rem;
+  font-size: 1rem;
 }
 
 // Example #3
 dk-device(desktop, XS, $until: MD) { // with one @mixin mq()-Argument
-	font-size: 1rem;
+  font-size: 1rem;
 }
 ```
 
 
 
 
-##### dk-theme($name [, $from] [, $until] [, $and] [, $media-type] [, $breakpoints] [, $responsive] [, $static-breakpoint]) { @content; }
+### dk-theme($name [, $from] [, $until] [, $and] [, $media-type] [, $breakpoints] [, $responsive] [, $static-breakpoint]) { @content; }
 
 Apply `@content` to a theme using the `@mixin mq()`
 
@@ -188,17 +188,17 @@ Apply `@content` to a theme using the `@mixin mq()`
 
 // Example #1
 dk-theme(desktop) {
-	background-color: #000;
+  background-color: #000;
 }
 
 // Example #2
 dk-theme(desktop, MD) {
-	background-color: #000;
+  background-color: #000;
 }
 
 // Example #3
 dk-theme(desktop, XS, $until: MD) { // with one @mixin mq()-Argument
-	background-color: #000;
+  background-color: #000;
 }
 ```
 

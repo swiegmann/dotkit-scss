@@ -4,7 +4,7 @@
 
 - Version: 2.0
 - Date: November 1st, 2020
-- Github Repository: https://github.com/swiegmann/dotkit-scss-2
+- Github Repository: https://github.com/swiegmann/dotkit-scss/
 - [MIT License](LICENSE)
 
 
@@ -34,7 +34,7 @@ Import it from your own files with: `@import "[path-to-your-dotkit-scss-2-folder
 ## Getting Started
 
 - [API](API.md)
-- [Example SCSS File](../example/_example.scss) 
+- [Example SCSS File](/example/_example.scss) 
 
 
 
@@ -56,7 +56,7 @@ div {
 }
 ```
 
-*Settings variables can be done in "node-style" (single) or maps (multiple). Because of a reserved wordlist in SASS, it may be neccessary to quote variable names/nodes.*
+*Setting variables can be done in "node-style" (single) or maps (multiple). Because of a reserved wordlist in SASS, it may be neccessary to quote variable names/nodes.*
 
 
 
