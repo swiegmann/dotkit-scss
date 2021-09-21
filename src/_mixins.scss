@@ -226,8 +226,8 @@
 //  background-color: #000;
 // }
 //
-// version: 1.0
-// date: 2020-08-29
+// version: 1.01
+// date: 2021-09-21
 @mixin _dk-custom-properties_device($device-map, $type) {
   @if map-has-key($device-map, $type) {
     $is-default-device: nth(map-keys($device-map), 1) == $type;
@@ -236,17 +236,17 @@
     $foo: "";
 
     @if $is-root-selector {
-      &.#{$type} {
+      &.#{to-lower-case($type)} {
         @content;
       }
     } @else {
       // html.#{$type} & {
       @if is-superselector('body', &) {
-        &.#{$type} {
+        &.#{to-lower-case($type)} {
           @content;
         }
       } @else {
-        body.#{$type} & {
+        body.#{to-lower-case($type)} & {
           @content;
         }
       }
