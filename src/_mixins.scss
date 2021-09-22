@@ -67,9 +67,17 @@
       $rec-root-key: null;
 
       @if type_of($key) == number {
-        $rec-root-key: $_root-key + "-" + $key;
+        @if $key == null {
+          $rec-root-key: $_root-key;
+        } @else {
+          $rec-root-key: $_root-key + "-" + $key;
+        }
       } @else {
-        $rec-root-key: $_root-key + "-" + to-lower-case($key);
+        @if $key == null {
+          $rec-root-key: $_root-key;
+        } @else {
+          $rec-root-key: $_root-key + "-" + to-lower-case($key);
+        }
       }
 
       $rec-value: map-get($map-properties, $key);

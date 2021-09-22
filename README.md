@@ -2,8 +2,8 @@
 
 [![License](https://img.shields.io/badge/licence-MIT-brightgreen.svg?style=flat)](https://mit-license.org/)
 
-- Version: 2.0
-- Date: November 1st, 2020
+- Version: 2.02
+- Date: September 22, 2021
 - Github Repository: https://github.com/swiegmann/dotkit-scss/
 - [MIT License](LICENSE)
 
@@ -34,7 +34,7 @@ Import it from your own files with: `@import "[path-to-your-dotkit-scss-2-folder
 ## Getting Started
 
 - [API](API.md)
-- [Example SCSS File](/example/_example.scss) 
+- [Example SCSS File](/example/_example.scss)
 
 
 
