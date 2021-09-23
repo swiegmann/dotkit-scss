@@ -316,7 +316,7 @@
       $root-selector-replaced: true;
 
       @if not($is-default) {
-        $sel-tmp: $sel-tmp + "." + $type;
+        $sel-tmp: $sel-tmp + "." + to-lower-case($type);
       }
     }
 
@@ -337,11 +337,11 @@
       }
     } @else {
       @if $is-root-selector {
-        @at-root #{$sel-replaced} #{$root-selector}.#{$type} {
+        @at-root #{$sel-replaced} #{$root-selector}.#{to-lower-case($type)} {
           @content;
         }
       } @else {
-        @at-root #{$root-selector}.#{$type} #{$sel-replaced} {
+        @at-root #{$root-selector}.#{to-lower-case($type)} #{$sel-replaced} {
           @content;
         }
       }

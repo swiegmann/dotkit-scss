@@ -2,8 +2,8 @@
 
 [![License](https://img.shields.io/badge/licence-MIT-brightgreen.svg?style=flat)](https://mit-license.org/)
 
-- Version: 2.02
-- Date: September 22, 2021
+- Version: 2.03
+- Date: September 23, 2021
 - Github Repository: https://github.com/swiegmann/dotkit-scss/
 - [MIT License](LICENSE)
 
