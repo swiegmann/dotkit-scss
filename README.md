@@ -1,4 +1,4 @@
-# dotkit-scss-2
+# dotkit-scss
 
 [![License](https://img.shields.io/badge/licence-MIT-brightgreen.svg?style=flat)](https://mit-license.org/)
 
@@ -11,7 +11,7 @@
 
 ## Overview
 
-dotKit-scss-2 is a lightweight `SASS/SCSS`-System (not even a framework due to its size).
+dotKit-scss is a lightweight `SASS/SCSS`-System (not even a framework due to its size).
 It comes with a bare minimum of mixins/functions.
 
 Key features:
@@ -27,7 +27,7 @@ Key features:
 
 ## How to use it
 
-Import it from your own files with: `@import "[path-to-your-dotkit-scss-2-folder]/_dotkit.scss";`
+Import it from your own files with: `@import "[path-to-your-dotkit-scss-folder]/_dotkit.scss";`
 
 
 
