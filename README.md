@@ -11,7 +11,7 @@
 
 ## Overview
 
-dotKit-scss is a lightweight `SASS/SCSS`-System (not even a framework due to its size).
+dotKit-scss is a lightweight `SASS/SCSS`-Toolkit for themes, devices and responsiveness.
 It comes with a bare minimum of mixins/functions.
 
 Key features:
