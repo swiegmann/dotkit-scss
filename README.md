@@ -2,8 +2,8 @@
 
 [![License](https://img.shields.io/badge/licence-MIT-brightgreen.svg?style=flat)](https://mit-license.org/)
 
-- Version: 2.03
-- Date: September 23, 2021
+- Version: 2.04
+- Date: February 09, 2023
 - Github Repository: https://github.com/swiegmann/dotkit-scss/
 - [MIT License](LICENSE)
 
@@ -64,11 +64,11 @@ div {
 
 ```SCSS
 $dk: dk-var(device, ( // "device" is a reserved node for all devices
-  "default": ( // name #1
+  "MOBILE": ( // name #1
     XS: dk-rem(0px, em), // breakpoint: from 0px - 960px (= next entry)
     MD: dk-rem(960px, em) // breakpoint: from 960px onward
   ),
-  desktop: ( // name #2
+  DESKTOP: ( // name #2
     XS: dk-rem(0px, em),
     MD: dk-rem(960px, em)
   )
@@ -83,13 +83,13 @@ $dk: dk-var(device, ( // "device" is a reserved node for all devices
 
 ```SCSS
 div {
-  @include dk-device(desktop) {
+  @include dk-device(DESKTOP) {
     ...
   }
 }
 
 div {
-  @include dk-device(desktop, MD) { // only from breakpoint MD (onward)
+  @include dk-device(DESKTOP, MD) { // only from breakpoint MD (onward)
     ...
   }
 }
@@ -107,7 +107,7 @@ Although using `@include dk-device()` might be handy, there is probably no need 
 $dk: dk-var(custom-properties-device, (
   "font": (
     "size": (
-      "default": (
+      MOBILE: (
         XS: clamp(1rem, calc(0.75rem + 1vw), 100rem),
         MD: clamp(1rem, calc(0.25rem + 1vw), 100rem)
       )
@@ -154,11 +154,11 @@ Best practice for themes would be the use of color-definitions.
 
 ```scss
 $dk: dk-var(theme, ( // "theme" is a reserved node for all themes
-  "default": ( // name #1
+  DEFAULT: ( // name #1
     XS: dk-rem(0px, em), // breakpoint: from 0px - 960px (= next entry)
     MD: dk-rem(960px, em) // breakpoint: from 960px onward
   ),
-  darkmode: ( // name #2
+  DARKMODE: ( // name #2
     XS: dk-rem(0px, em),
     MD: dk-rem(960px, em)
   )
@@ -173,13 +173,13 @@ $dk: dk-var(theme, ( // "theme" is a reserved node for all themes
 
 ```scss
 div {
-  @include dk-theme(darkmode) {
+  @include dk-theme(DEFAULT) {
     ...
   }
 }
 
 div {
-  @include dk-theme(darkmode, MD) { // only from breakpoint MD (onward)
+  @include dk-theme(DARKMODE, MD) { // only from breakpoint MD (onward)
     ...
   }
 }
@@ -197,8 +197,8 @@ Although using `@include dk-theme()` might be handy, there is probably no need f
 $dk: dk-var(custom-properties-theme, (
   color: (
     background: (
-      default: #fff,
-      darkmode: #000
+      DEFAULT: #fff,
+      DARKMODE: #000
     )
   )
 ));

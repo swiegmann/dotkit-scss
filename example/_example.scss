@@ -8,14 +8,14 @@
 // Devices [+ Breakpoints]
 //
 $dk: dk-var(device, (
-  "default": ( // Default (Configure it as "Mobile First")
+  MOBILE: ( // Default (Configure it as "Mobile First")
     XS: dk-rem(0px, em),    // e[X]tra-[S]mall
     SM: dk-rem(640px, em),  // [SM]all
     MD: dk-rem(960px, em),  // [M]e[D]ium
     LG: dk-rem(1280px, em), // [L]ar[G]e
     XL: dk-rem(1920px, em) // e[X]tra [L]arge
   ),
-  desktop: ( // Desktop
+  DESKTOP: ( // Desktop
     XS: dk-rem(0px, em),    // e[X]tra-[S]mall
     SM: dk-rem(640px, em),  // [SM]all
     MD: dk-rem(960px, em), // [M]e[D]ium
@@ -30,14 +30,14 @@ $dk: dk-var(device, (
 // Themes [+ Breakpoints]:
 //
 $dk: dk-var(theme, (
-  "default": ( // Default
+  DEFAULT: ( // Default
     XS: dk-rem(0px, em),    // e[X]tra-[S]mall
     SM: dk-rem(640px, em),  // [SM]all
     MD: dk-rem(960px, em), // [M]e[D]ium
     LG: dk-rem(1280px, em), // [L]ar[G]e
     XL: dk-rem(1920px, em) // e[X]tra [L]arge
   ),
-  darkmode: (
+  DARKMODE: (
     XS: dk-rem(0px, em),    // e[X]tra-[S]mall
     SM: dk-rem(640px, em),  // [SM]all
     MD: dk-rem(960px, em), // [M]e[D]ium
@@ -53,7 +53,7 @@ $dk: dk-var(theme, (
 $dk: dk-var(custom-properties-device, (
   "font": (
     "size": (
-      "default": (
+      MOBILE: (
         XS: clamp(1rem, calc(0.75rem + 1vw), 100rem),
         SM: clamp(1rem, calc(0.667rem + 1vw), 100rem),
         MD: clamp(1rem, calc(0.25rem + 1vw), 100rem),
@@ -77,10 +77,10 @@ $dk: dk-var(custom-properties-device, (
 $dk: dk-var("color", (
   "black": #000,
   "white": #fff,
-  "default": (
+  DEFAULT: (
     "gray": #c0c0c0
   ),
-  darkmode: (
+  DARKMODE: (
     dark-gray: #202020
   )
 ));
@@ -91,12 +91,12 @@ $dk: dk-var(custom-properties-theme, (
   color: (
     body: (
       background: (
-        "default": dk-var("color/default/gray"),
-        darkmode: dk-var("color/darkmode/dark-gray")
+        DEFAULT: dk-var("color/DEFAULT/gray"),
+        DARKMODE: dk-var("color/DARKMODE/dark-gray")
       ),
       "font": (
-        "default": dk-var("color/black"),
-        darkmode: dk-var("color/white")
+        DEFAULT: dk-var("color/black"),
+        DARKMODE: dk-var("color/white")
       )
     )
   )

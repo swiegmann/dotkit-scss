@@ -1,6 +1,8 @@
 # Changelog
 
 
+- 2.04 / 2023-02-09
+  - refactor all device/theme-names uppercase in definitions
 - 2.03 / 2021-09-23  
   - fix generated device/theme name not lowercase
 - 2.02 / 2021-09-22

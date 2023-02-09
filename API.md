@@ -101,7 +101,7 @@ Apply mapped custom-properties ("CSS Variables") based on name/breakpoint-map to
 html { // any selector
   @include dk-custom-properties(
     ( // name/breakpoint-map
-      "default": (XS: 0em, MD: 60em)
+      MOBILE: (XS: 0em, MD: 60em)
     ),
     ( // property-map
       "padding": (XS: 1rem, MD: 2rem)
@@ -124,13 +124,13 @@ html {
 html { // any selector
   @include dk-custom-properties(
     ( // name/breakpoint-map
-      "default": (XS: 0em, MD: 60em),
-      desktop: (XS: 0em, MD: 60em)
+      MOBILE: (XS: 0em, MD: 60em),
+      DESKTOP: (XS: 0em, MD: 60em)
     ),
     ( // property-map
       "padding": (
-        "default": (XS: 1rem, MD: 2rem),
-        desktop: (XS: 2rem, MD: 4rem)
+        MOBILE: (XS: 1rem, MD: 2rem),
+        DESKTOP: (XS: 2rem, MD: 4rem)
       )
     )
   );
@@ -161,17 +161,17 @@ Apply `@content` to a device using the `@mixin mq()`
 // Prerequisites: name/breakpoint-map set-up with: "$dk: dk-var(device, ...)"
 
 // Example #1
-dk-device(desktop) {
+dk-device(DESKTOP) {
   font-size: 1rem;
 }
 
 // Example #2
-dk-device(desktop, MD) {
+dk-device(DESKTOP, MD) {
   font-size: 1rem;
 }
 
 // Example #3
-dk-device(desktop, XS, $until: MD) { // with one @mixin mq()-Argument
+dk-device(DESKTOP, XS, $until: MD) { // with one @mixin mq()-Argument
   font-size: 1rem;
 }
 ```
@@ -187,17 +187,17 @@ Apply `@content` to a theme using the `@mixin mq()`
 // Prerequisites: name/breakpoint-map set-up with: "$dk: dk-var(theme, ...)"
 
 // Example #1
-dk-theme(desktop) {
+dk-theme(DEFAULT) {
   background-color: #000;
 }
 
 // Example #2
-dk-theme(desktop, MD) {
+dk-theme(DARKMODE, MD) {
   background-color: #000;
 }
 
 // Example #3
-dk-theme(desktop, XS, $until: MD) { // with one @mixin mq()-Argument
+dk-theme(DARKMODE, XS, $until: MD) { // with one @mixin mq()-Argument
   background-color: #000;
 }
 ```
